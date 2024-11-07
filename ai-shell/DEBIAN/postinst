@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Define colors for better readability
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+RESET='\033[0m'  # Reset to default color
+
+# Check if /etc/ai-shell directory exists, if not, create it
+if [ ! -d "/etc/ai-shell" ]; then
+  echo -e "${YELLOW}/etc/ai-shell directory does not exist. Creating it now.${RESET}"
+  mkdir -p /etc/ai-shell
+else
+  echo -e "${GREEN}/etc/ai-shell directory already exists.${RESET}"
+fi
+
+# Check if .env file exists in /etc/ai-shell
+if [ ! -f "/etc/ai-shell/.env" ]; then
+  echo -e "${YELLOW}.env file not found in /etc/ai-shell. Creating it now.${RESET}"
+  
+  # Create .env file with a comment and API_KEY line
+  echo -e "# Add your Gemini API key below" > /etc/ai-shell/.env
+  echo -e "API_KEY=" >> /etc/ai-shell/.env
+  
+  echo -e "${GREEN}.env file created successfully!${RESET}"
+else
+  echo -e "${GREEN}.env file already exists.${RESET}"
+fi
+
+# Prompt the user to change permissions of the .env file for security
+echo -e "${YELLOW}Make sure to set the correct permissions for the .env file:${RESET}"
+echo -e "${BLUE}Use the command: sudo chmod 600 /etc/ai-shell/.env${RESET}"
+
+# Ensure the .env file has secure permissions (optional)
+# chmod 600 /etc/ai-shell/.env
+
+# Ensure /usr/local/bin/ai-shell is executable
+echo -e "${YELLOW}Ensuring that /usr/local/bin/ai-shell is executable...${RESET}"
+chmod +x /usr/local/bin/ai-shell
+
+# Installation completed message
+echo -e "${GREEN}Installation completed! Please remember to add your Gemini API key to /etc/ai-shell/.env.${RESET}"

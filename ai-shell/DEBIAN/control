@@ -1,0 +1,8 @@
+Package: ai-shell
+Version: 1.0.0
+Architecture: amd64
+Maintainer: Your Name <your-email@example.com>
+Description: AI-powered shell to execute system commands from natural language instructions
+Depends: bash, curl, figlet, lolcat, jq
+Priority: optional
+Section: utils
