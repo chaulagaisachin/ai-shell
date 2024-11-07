@@ -3,31 +3,47 @@ name: Build and Release ai-shell
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main
     paths:
-      - ai-shell/**   # Trigger only when files in ai-shell/ directory change
+      - '**/*.sh'
+      - '**/*.deb'
+      - 'ai-shell/**'
+  workflow_dispatch:  # This enables manual triggering of the workflow
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Setup Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zip
 
-    - name: Set up dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y dpkg-dev
+      - name: Run build script
+        run: |
+          chmod +x build.sh
+          ./build.sh
 
-    - name: Build the .deb package
-      run: |
-        chmod +x scripts/build.sh
-        ./scripts/build.sh
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ai-shell-deb
+          path: ai-shell.deb
+          
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Upload .deb package as release asset
-      uses: softprops/action-gh-release@v1
-      with:
-        files: release/*.deb
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ai-shell.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
