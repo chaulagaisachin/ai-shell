@@ -1,0 +1,33 @@
+name: Build and Release ai-shell
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to main branch
+    paths:
+      - ai-shell/**   # Trigger only when files in ai-shell/ directory change
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y dpkg-dev
+
+    - name: Build the .deb package
+      run: |
+        chmod +x scripts/build.sh
+        ./scripts/build.sh
+
+    - name: Upload .deb package as release asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*.deb
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
