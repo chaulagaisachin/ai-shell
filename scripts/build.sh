@@ -14,3 +14,4 @@ dpkg-deb --build $DEB_DIR $OUTPUT_DIR/${PACKAGE_NAME}_${VERSION}.deb
 
 # Print success message
 echo "Debian package created: $OUTPUT_DIR/${PACKAGE_NAME}_${VERSION}.deb"
+
