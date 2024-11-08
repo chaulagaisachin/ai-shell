@@ -19,19 +19,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y zip
 
-      - name: Set permissions on postinst
-        run: chmod 755 ai-shell/DEBIAN/postinst
-
       - name: Run build script
         run: |
           chmod +x ./scripts/build.sh
           ./scripts/build.sh
 
+      - name: List files in release directory
+        run: ls -l release/  # Debugging step to verify the .deb file
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
           name: ai-shell-deb
-          path: release/ai-shell_*.deb  # Full path to the .deb file in the release folder
+          path: release/ai-shell_*.deb  # Path to the .deb file in the release folder
 
   release:
     needs: build
@@ -43,11 +43,14 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
-          name: ai-shell-deb
+          name: ai-shell-deb  # Download the artifact uploaded in the build job
+
+      - name: Verify downloaded artifact
+        run: ls -l  # Verify the downloaded artifact is available
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: release/ai-shell_*.deb  # Path to the downloaded .deb file
+          files: release/ai-shell_*.deb  # Ensure this points to the downloaded artifact location
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
