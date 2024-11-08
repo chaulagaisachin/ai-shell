@@ -18,10 +18,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y zip
-      
-      - name: Change permissions of postinst
+
+      - name: Change permissions for postinst
         run: |
-          chmod 755 ai-shell/DEBIAN/postinst  # Update permissions for postinst script    
+          chmod 755 ai-shell/DEBIAN/postinst  # Ensure postinst has proper permissions
 
       - name: Run build script
         run: |
@@ -57,4 +57,4 @@ jobs:
         with:
           files: release/ai-shell_*.deb  # Ensure this points to the downloaded artifact location
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Use Personal Access Token (PAT) instead of default GITHUB_TOKEN
