@@ -24,6 +24,10 @@ jobs:
           chmod +x ./scripts/build.sh
           ./scripts/build.sh
 
+      - name: Change permissions of postinst
+        run: |
+          chmod 755 ai-shell/DEBIAN/postinst  # Update permissions for postinst script
+
       - name: List files in release directory
         run: ls -l release/  # Debugging step to verify the .deb file
 
