@@ -25,11 +25,11 @@ jobs:
           ./scripts/build.sh
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3  # Updated to v3
+        uses: actions/upload-artifact@v3
         with:
-          name: ai-shell-deb
-          path: ai-shell.deb  # Ensure this points to the correct location of your .deb file
-          
+          name: ai-shell-deb                # The name of the artifact as it will appear in the workflow
+          path: release/ai-shell_*.deb       # Path to the .deb file in the release folder
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -45,6 +45,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ai-shell.deb  # Ensure this is the correct path for the downloaded artifact
+          files: release/ai-shell_*.deb  # Ensure this matches the downloaded artifact location
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
