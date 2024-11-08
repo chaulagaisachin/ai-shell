@@ -50,7 +50,10 @@ jobs:
           name: ai-shell-deb  # Download the artifact uploaded in the build job
 
       - name: Verify downloaded artifact
-        run: ls -l  # Verify the downloaded artifact is available
+        run: |
+          pwd  # Show the current working directory
+          ls -l  # List files to verify the downloaded artifact is available
+        
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
