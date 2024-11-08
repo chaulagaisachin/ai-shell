@@ -3,14 +3,8 @@ name: Build and Release ai-shell
 on:
   push:
     tags:
-      - 'v*'
-    branches:
-      - main
-    paths:
-      - '**/*.sh'
-      - '**/*.deb'
-      - 'ai-shell/**'
-  workflow_dispatch:  # This enables manual triggering of the workflow
+      - 'v*'  # Trigger on any tag starting with 'v'
+  workflow_dispatch:  # Manual trigger also allowed
 
 jobs:
   build:
@@ -34,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3  # Updated to v3
         with:
           name: ai-shell-deb
-          path: ai-shell.deb
+          path: ai-shell.deb  # Ensure this points to the correct location of your .deb file
           
   release:
     needs: build
@@ -43,9 +37,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
         with:
-          files: ai-shell.deb
+          name: ai-shell-deb
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ai-shell.deb  # Ensure this is the correct path for the downloaded artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
